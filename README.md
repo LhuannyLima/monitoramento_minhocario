@@ -19,8 +19,12 @@ Desenvolver dispositivo eletrônico para detecção dos índices de umidade e te
 - desenvolver um dispositivo eletrônico para detecção de temperatura
 
 ## 4.	Metodologia
-Esta pesquisa se caracteriza como experimental. As pesquisas experimentais são aquelas que manipulam o objeto para controlar os elementos que o compõem (Tumelero, 2019). 
-Neste estudo, testaremos o uso do dispositivo de temperatura e umidade para o controle do substrato do minhocário. 
+Esta pesquisa se caracteriza como experimental. As pesquisas experimentais são aquelas que manipulam o objeto para controlar os elementos que o compõem (Tumelero, 2019).  Nesta pesquisa, o objeto é o substrato do minhocário e os elementos que serão controlados serão a temperatura e a umidade. Para isso, criaremos e testaremos o uso do dispositivo de temperatura e umidade para o controle do substrato do minhocário. 
+Para a construção deste dispositivo será utilizada uma placa de Arduino Uno, sensores de temperatura e umidade, atuadores Buzzer (dispositivos que transmitem sons), e LEDs para transmitir a cor vermelha para solo seco, verde para situação ideal e azul para muita umidade. 
+As informações coletadas pelo dispositivo serão enviadas para o celular do produtor rural via Bluetooth para o aplicativo Serial Bluetooth Terminal, que é aberto para uso geral. 
+Esta pesquisa se caracteriza como experimental. As pesquisas experimentais são aquelas que manipulam o objeto para controlar os elementos que o compõem (Tumelero, 2019).  Nesta pesquisa, o objeto é o substrato do minhocário e os elementos que serão controlados serão a temperatura e a umidade. Para isso, criaremos e testaremos o uso do dispositivo de temperatura e umidade para o controle do substrato do minhocário. 
+Para a construção deste dispositivo será utilizada uma placa de Arduino Uno, sensores de temperatura e umidade, atuadores Buzzer (dispositivos que transmitem sons), e LEDs para transmitir a cor vermelha para solo seco, verde para situação ideal e azul para muita umidade. 
+As informações coletadas pelo dispositivo serão enviadas para o celular do produtor rural via Bluetooth para o aplicativo Serial Bluetooth Terminal, que é aberto para uso geral. 
 
 ## 5.	Resultados esperados 
 Esperamos que o dispositivo desenvolvido atenda as necessidades dos produtores rurais que possuem ou querem construir minhocários e produzir humus. 
