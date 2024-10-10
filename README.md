@@ -32,3 +32,5 @@ Esperamos que o dispositivo desenvolvido atenda as necessidades dos produtores r
 ## 6.	Referências
 MOTA, A. D. Apostila Arduíno Básico, Vol 1. Serra: Vida de Silício, 2015.
 SCHIEDECK, Gustavo et al. Minhocultura: produção de humus. 2. ed. Brasília: Embrapa, 2014. 56 p. Disponível em: https://ainfo.cnptia.embrapa.br/digital/bitstream/item/128305/1/ABC-Minhocultura-ed02-2014.pdf. Acesso em: 01 out. 2024.
+TUMELERO, N. Pesquisa experimental: o que é e como fazer em 5 passos. Disponível em: <https://blog.mettzer.com/pesquisa-experimental/>.
+
