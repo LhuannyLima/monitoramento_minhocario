@@ -1,4 +1,4 @@
-# Documentação PROJETO DETECCAO UMIDADE TEMPERATURA MINHOCARIO
+# Documentação PROJETO DETECAO UMIDADE TEMPERATURA MINHOCARIO
 
 ## 1.	Introdução
 A minhocultura é o nome que damos à criação de minhocas.  É simples e de baixo custo para agricultores e fácil para se conseguir os materiais que são necessários para utilizar na criação dos minhocários dentro das propriedades rurais (Formenton, 2005). 
