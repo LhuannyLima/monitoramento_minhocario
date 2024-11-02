@@ -1,127 +1,138 @@
-#include <SoftwareSerial.h>
-#include <Wire.h>
-#include <RTClib.h>
-#include <OneWire.h>
-#include <DallasTemperature.h>
+//No total, meu código utiliza cinco bibliotecas
+#include <SoftwareSerial.h> //aqui é para comunicação serial com o módulo Bluetooth
+#include <Wire.h> // aqui é para comunicação I2C, necessária para o RTC (relógio)
+#include <RTClib.h> // aqui é para controlar o módulo RTC DS3231
+#include <OneWire.h> //esse é necessária para o sensor de temperatura DS18B20
+#include <DallasTemperature.h> //aqui é  para controle do sensor de temperatura DS18B20
 
-// aqui eu tô definindo os pinos RX e TX para o Bluetooth
+// aqui eu to pedindo para defini os pinos RX e TX para o Bluetooth
 SoftwareSerial BTSerial(10, 11); 
 
-// aqui eu tô criando o objeto para o RTC(relógio)
+// já aqui eu to criando o objeto para o RTC (relógio)
 RTC_DS3231 rtc;
 
-// nessa parte eu tô definindo as porta  dos pinos do sensor de umidade, LEDs, sensor de temperatura e buzzer
-const int pinUmidade = A0; // aqui é do pino do sensor de umidade
+// nesse momento eu to definindo as portas dos pinos do sensor de umidade, LEDs, sensor de temperatura e buzzer
+const int pinUmidade = A0; //aqui é  Pino do sensor de umidade
 const int pinVermelho = 5;    
-const int pinVerde = 6;    
+const int pinVerde = 6;   
 const int pinAzul = 7;     
-const int pinBuzzer = 8;  // aui é do pino do buzzer
-const int pinTemp = 9;   //aui é do pino do sensor de temperatura (DS18B20)
+const int pinBuzzer = 8;   // essa porta aqui é do pino do buzzer
+const int pinTemp = 9;     // já essa aqui é do pino do sensor de temperatura (DS18B20)
 
-// aqui eu to definindo a biblioteca OneWire e DallasTemperature (DS18B20)
+// aqui eu fazendo definição  da biblioteca OneWire e DallasTemperature (DS18B20)
 OneWire oneWire(pinTemp);
 DallasTemperature sensor(&oneWire);
 DeviceAddress endereco_temp;
 
 void setup() {
-  // aqui eu dando inicio  a comunicação serial com o módulo Bluetooth
+  // aqui eu pedindo para inicia a comunicação serial com o módulo Bluetooth
   BTSerial.begin(9600);
-
-  // aqui eu to dando inicio a comunicação serial com o monitor serial
+  
+  // já aqui eu pedindo para inicia a comunicação serial com o monitor serial
   Serial.begin(9600);
 
-  //aqui eu to pedindo para dar inicio a RTC(relógio)
+  //aqui eu pedindo para inicia a  RTC (relógio)
   if (!rtc.begin()) {
     Serial.println("RTC não encontrado!");
     while (1);
   }
 
-  // aqui eu to ajustando a hora manualmente
-  rtc.adjust(DateTime(2024, 10, 22, 15, 41, 0)); 
-  //aqui to pedindo para dar início ao sensor de temperatura (DS18B20)
+  // essa parte é se o RTC estiver sem a hora definida,eu peço para configura na hora atual 
+  if (rtc.lostPower()) {
+    Serial.println("RTC perdeu a energia! Configurando a hora...");
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__))); // aqui eu to pedindo para sincroniza com o horario 
+    // do computador que estamos utilizando 
+  }
+
+  // nessa parte  eu to pedindo para inicia a  o sensor de temperatura (DS18B20)
   sensor.begin();
 
-  // aqui eu to definindo os pinos dos LEDs e do buzzer como saída
+  // já essa parte eu to definindo os pinos dos LEDs e do buzzer como saída
   pinMode(pinVermelho, OUTPUT);
   pinMode(pinVerde, OUTPUT);
   pinMode(pinAzul, OUTPUT);
   pinMode(pinBuzzer, OUTPUT);
 
-  // Mensagem inicial
-  Serial.println("Sistema iniciado");
-  BTSerial.println("Sistema iniciado");
+  // já aqui eu quero mostra uma Mensagem que o programa ta iniciando e ta tudo ok
+  Serial.println("Sistema iniciado com sucesso!");
+  BTSerial.println("Sistema iniciado com sucesso!");
 }
 
 void loop() {
-  // aqui eu quero que ele comece com  horário atual do RTC(relógio)
+  // esse é parte é hora atual do RTC que eu to pedindo 
   DateTime now = rtc.now();
-  
-  // aqui eu to definino  o horário como string (hh:mm:ss)
-  String timeString = String(now.hour()) + ":" + String(now.minute()) + ":" + String(now.second());
 
-  //aqui eu tô pedido para a leitura dos valores de umidade
+  // aqui eu quero que mostre o horário como string (hh:mm)
+  String timeString = String(now.hour()) + ":" + String(now.minute());
+
+  // nessa parte eu quero Leia os valores da umidade
   int umidadeValor = analogRead(pinUmidade);
-  umidadeValor = map(umidadeValor, 0, 1023, 100, 0); // aqui eu to fazendo o mapeamento da umidade para ficar entre 0 a 100% 
+  umidadeValor = map(umidadeValor, 0, 1023, 100, 0); // eu quero que ele faça o mapeamento da umidade de 0 a 100% 
 
-  // aqui eu to pedindo para controlar os LEDS da umidade 
+  // to fazendo o controle dos LEDs de acordo a umidade a cada valor tem uma cor diferente 
   if (umidadeValor < 60) {
-    analogWrite(pinVermelho, 255); // esse Leds é para informa que o solo estar muito seco
+    analogWrite(pinVermelho, 255); //aqui o solo estar  muito seco ai vai acende um leds da cor vermelha 
     analogWrite(pinVerde, 0);
     analogWrite(pinAzul, 0);
     Serial.println("Solo do minhocário seco!");
     BTSerial.println("Solo do minhocário seco!");
   } else if (umidadeValor >= 60 && umidadeValor <= 70) {
     analogWrite(pinVermelho, 0);
-    analogWrite(pinVerde, 255); // esse Leds é para informa que o solo está ideal
+    analogWrite(pinVerde, 255); // já aqui o solo estar ideal ai vai acende um leds da  cor verde 
     analogWrite(pinAzul, 0);
     Serial.println("Solo do minhocário ideal!");
     BTSerial.println("Solo do minhocário ideal!");
   } else {
     analogWrite(pinVermelho, 0);
     analogWrite(pinVerde, 0);
-    analogWrite(pinAzul, 255); // esse Leds é para informa que o solo está muito úmido
+    analogWrite(pinAzul, 255); // já nesse daqui o solo estar muito umido ai vai acende um leds da  cor azul 
     Serial.println("Solo do minhocário muito úmido!");
     BTSerial.println("Solo do minhocário muito úmido!");
   }
 
-  // Aqui eu to pedindo pra mostrar tudo  juntos quanto a umidade e hora atual
+  // essa parte eu  quero mostre a  umidade e hora atual juntos
   Serial.println("Umidade: " + String(umidadeValor) + "%");
   BTSerial.println("Umidade: " + String(umidadeValor) + "%");
   Serial.println("Hora atual: " + timeString);
   BTSerial.println("Hora atual: " + timeString);
 
-  // aqui eu quero que faça a leitura do sensor de temperatura DS18B20
+  // eu quero que  ele me informe ser sensor o de temperatura DS18B20 estar conectado
   sensor.requestTemperatures();
   if (!sensor.getAddress(endereco_temp, 0)) {
     Serial.println("SENSOR DE TEMPERATURA NÃO CONECTADO");
   } else {
+    //aqui eu to chamando um método getTempC do objeto sensor de temperatura e
+    //o método recebe um parâmetro chamado endereco_temp, que é um identificador como endereço do sensor.
     float temperatura = sensor.getTempC(endereco_temp);
     Serial.print("Temperatura = ");
     Serial.println(temperatura, 1);
     BTSerial.print("Temperatura = ");
     BTSerial.println(temperatura, 1);
 
-    // nesse comando eu to pedindo que controle a temperatura e buzzer juntos 
+    // nessa parte to pedindo para controlar a temperatura e o buzzer junto
+ //   esta linha enviará a mensagem "Temperatura ideal" 
     if (temperatura >= 20.0 && temperatura <= 25.0) {
       Serial.println("Temperatura ideal");
       BTSerial.println("Temperatura ideal");
-      noTone(pinBuzzer); // nessa função eu to pedindo para desligar o buzzer se a temperatura estiver ideal
+      noTone(pinBuzzer); //nessa parte eu peço para desligar o buzzer se a temperatura estiver ideal
     } else if (temperatura < 20.0) {
       Serial.println("Temperatura muito fria");
       BTSerial.println("Temperatura muito fria");
-      tone(pinBuzzer, 1000); // nessa função eu to pedindo para acionar buzzer se a temperatura estiver fria (1000 Hz)
-      delay(500);
+      tone(pinBuzzer, 1000); // aqui to pedindo pra aciona o buzzer se a temperatura estiver fria 
+      //ele vai emita um som com uma frequência de 1000 Hz.
+      delay(500);// aqui to pedindo aguarda meio segundo
       noTone(pinBuzzer);
     } else if (temperatura > 25.0) {
       Serial.println("Temperatura muito quente");
       BTSerial.println("Temperatura muito quente");
-      tone(pinBuzzer, 2000); //nessa função eu to pedindo para acionar buzzer se a  temperatura  estiver quente (2000 Hz)
+      tone(pinBuzzer, 2000); //aqui to pedindo pra aciona o buzzer se a temperatura estiver quente 
+      //ele vai emita um som com uma frequência de 2000 Hz.
       delay(500);
       noTone(pinBuzzer);
     }
   }
 
-  // aqui ele vai separar a próxima leitura para ficar organizado 
+  //aqui to separando com uma linha  para deixar mais organizado
   Serial.println("___________________________________");
   BTSerial.println("___________________________________");
 
